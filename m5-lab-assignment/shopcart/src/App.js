@@ -1,48 +1,40 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./App.css";
 
-const Navbar = ({ totalQuantity }) => {
-  return (
-    <div className="bg-info text-white p-3 d-flex justify-content-between align-items-center">
-      <h2>Shop to React</h2> 
-      <div>
-        <FontAwesomeIcon icon={faShoppingCart} /> {totalQuantity} items 
-      </div>
-    </div>
-  );
-};
-
-const Product = ({ product }) => {
-  return (
-    <div className="d-flex align-items-center border-bottom p-3">
-      <div className="me-4" style={{ width: '150px' }}>
-        <p className="mb-2 fw-bold">{product.desc}</p>
-        <img src={product.image} alt={product.desc} width="100" />
-      </div>
-      <div className="d-flex align-items-center">
-        <span className="border p-2 me-2 d-inline-block text-center" style={{ width: '40px' }}>
-          {product.value}
-        </span>
-        <span>quantity</span>
-      </div>
-    </div>
-  );
-};
+// Import your separated components and data
+import { productsData } from "./products";
+import Navbar from "./navbar";
+import DisplayProducts from "./displayProducts";
+import Cart from "./cart";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [
-        { id: 1, image: './products/cologne.jpg', desc: 'Unisex Cologne', value: 0 },
-        { id: 2, image: './products/iwatch.jpg', desc: 'Apple iWatch', value: 0 },
-        { id: 3, image: './products/mug.jpg', desc: 'Unique Mug', value: 0 },
-        { id: 4, image: './products/wallet.jpg', desc: 'Mens Wallet', value: 0 }
-      ]
+      products: productsData
     };
   }
+
+  // Handlers for Add and Subtract buttons
+  handleIncrement = (product) => {
+    const products = [...this.state.products];
+    const index = products.indexOf(product);
+    products[index] = { ...products[index] };
+    products[index].value++;
+    this.setState({ products });
+  };
+
+  handleDecrement = (product) => {
+    const products = [...this.state.products];
+    const index = products.indexOf(product);
+    products[index] = { ...products[index] };
+    if (products[index].value > 0) {
+      products[index].value--;
+    }
+    this.setState({ products });
+  };
 
   render() {
     const totalQuantity = this.state.products
@@ -50,15 +42,29 @@ class App extends Component {
       .reduce((acc, curr) => acc + curr, 0); 
 
     return (
-      <div className="App">
-        <Navbar totalQuantity={totalQuantity} />
-        
-        <div className="container mt-4">
-          {this.state.products.map(product => (
-            <Product key={product.id} product={product} />
-          ))}
+      <Router>
+        <div className="App">
+          {/* Navbar is outside routes so it always shows */}
+          <Navbar totalQuantity={totalQuantity} />
+          
+          <Routes>
+            <Route 
+              path="/" 
+              element={
+                <DisplayProducts 
+                  products={this.state.products} 
+                  onIncrement={this.handleIncrement}
+                  onDecrement={this.handleDecrement}
+                />
+              } 
+            />
+            <Route 
+              path="/cart" 
+              element={<Cart products={this.state.products} />} 
+            />
+          </Routes>
         </div>
-      </div>
+      </Router>
     );
   }
 }
