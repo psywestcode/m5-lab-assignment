@@ -8,12 +8,15 @@ import { productsData } from "./products";
 import Navbar from "./navbar";
 import DisplayProducts from "./displayProducts";
 import Cart from "./cart";
+import SignIn from "./signIn";      // New Import
+import CheckOut from "./checkout";  // New Import
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: productsData
+      products: productsData,
+      userName: "" // Add userName to state to pass between SignIn and CheckOut
     };
   }
 
@@ -34,6 +37,11 @@ class App extends Component {
       products[index].value--;
     }
     this.setState({ products });
+  };
+
+  // Handler to set the user's name from Facebook Login
+  setUserName = (name) => {
+    this.setState({ userName: name });
   };
 
   render() {
@@ -61,6 +69,15 @@ class App extends Component {
             <Route 
               path="/cart" 
               element={<Cart products={this.state.products} />} 
+            />
+            {/* New Routes for Part 1 */}
+            <Route 
+              path="/signin" 
+              element={<SignIn setUserName={this.setUserName} />} 
+            />
+            <Route 
+              path="/checkout" 
+              element={<CheckOut userName={this.state.userName} />} 
             />
           </Routes>
         </div>
