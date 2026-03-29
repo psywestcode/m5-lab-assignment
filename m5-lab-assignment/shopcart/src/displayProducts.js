@@ -46,11 +46,15 @@ const DisplayProducts = ({ products, onIncrement, onDecrement }) => {
 
       {sortedProducts.map(product => (
         <div key={product.id} className="d-flex align-items-center border-bottom p-3">
-          <div className="me-4" style={{ width: '150px' }}>
-            {/* Added price display next to description */}
-            <p className="mb-2 fw-bold">
+          
+          {/* INCREASED WIDTH TO 200px */}
+          <div className="me-4" style={{ width: '200px' }}> 
+            
+            {/* ADDED text-nowrap TO PREVENT LINE BREAKS */}
+            <p className="mb-2 fw-bold text-nowrap">
               {product.desc} <span className="text-danger fw-normal">${product.price}</span>
             </p>
+            
             <img 
               src={product.image} 
               alt={product.desc} 
@@ -59,6 +63,7 @@ const DisplayProducts = ({ products, onIncrement, onDecrement }) => {
               style={{ cursor: "pointer" }}
             />
           </div>
+          
           <div className="d-flex align-items-center">
             <Button variant="secondary" className="me-2" onClick={() => onIncrement(product)}>
               <FontAwesomeIcon icon={faPlusCircle} />
