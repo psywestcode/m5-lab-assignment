@@ -46,7 +46,7 @@ function SignIn({ setUserName }) {
         </form>
 
         <FacebookLogin
-          appId="1311071227531104" // You can leave this as a placeholder for the assignment or add a real App ID
+          appId="979574514703685" // You can leave this as a placeholder for the assignment or add a real App ID
           autoLoad={false}
           fields="name,email,picture"
           callback={responseFacebook}
